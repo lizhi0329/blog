@@ -1,3 +1,1 @@
-const a = 'a'
-
-new Promise(() => {})
+import './index.css'
