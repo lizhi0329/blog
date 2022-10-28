@@ -6,13 +6,14 @@ BFC的定义，在官方文档到中是这么介绍的：一个BFC区域包含�
 ### 怎样使一个元素变成BFC区域
 
 - 设置浮动，不包括none
-- 设置定位，absoulte或者fixed
-- 行内块显示模式，inline-block
+- position的值为absolute或fixed
 - 设置overflow，即hidden，auto，scroll
-- 表格单元格，table-cell
-- 弹性布局，flex
+- display的值为inline-block、table-cell、table-caption
 
 ### 可解决的问题
 
 - margin重叠
 - 清除浮动导致父元素高度塌陷
+
+
+- [](https://github.com/zuopf769/notebook/blob/master/fe/BFC%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/README.md)
