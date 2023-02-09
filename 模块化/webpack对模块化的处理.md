@@ -6,52 +6,6 @@
 
 ## esModule 与 commonJs
 
-### esModule
-
-单个导出
-```js
-export const name = '单个导出'
-export function hello () {
-  console.log('单个导出')
-}
-```
-
-合并导出
-```js
-const name = '合并导出'
-function hello () {
-    console.log('合并导出')
-}
-export { name, hello }
-```
-
-默认导出
-```js
-const name = '默认导出'
-export function hello () {
-    console.log('默认导出')
-}
-// 只允许有一个默认导出
-export default name;
-```
-
-- export暴露的是模块的引用关系(地址)，并且只读不可修改
-- 当模块内值改变，导入的值也会改变
-
-### commonJs
-
-```js
-// example.js
-var x = 5;
-var addX = function (value) {
-  return value + x;
-};
-module.exports.x = x;
-module.exports.addX = addX;
-```
-
-- require命令用于加载模块文件。require命令的基本功能是，读入并执行一个JavaScript文件，然后返回该模块的exports对象
-- CommonJS模块的加载机制是，输入的是被输出的值的拷贝。也就是说，一旦输出一个值，模块内部的变化就影响不到这个值
 
 ## webpack处理两种模块
 
