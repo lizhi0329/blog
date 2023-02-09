@@ -50,49 +50,85 @@
 /******/ 	
 ```
 
+源文件：
 ```js
+export let sync = 'sync';
+```
+
+编译后：
+```js
+/***/ "./src/es_sync.js":
+/*!************************!*\
+  !*** ./src/es_sync.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+// eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"sync\": () => (/* binding */ sync)\n/* harmony export */ });\nlet sync = 'sync';\n\n//# sourceURL=webpack://webpack-async/./src/es_sync.js?");
 __webpack_require__.r(__webpack_exports__);
-__webpack_require__.d(__webpack_exports__, {
-  "sync": () => (/* binding */ sync)
-})
-let sync = 'sync'
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "sync": () => (/* binding */ sync)
+/* harmony export */ });
+let sync = 'sync';
+
+/***/ }),
+
+```
+
+源文件
+```js
+import { sync } from './es_sync';
+console.log('es_sync', sync);
 ```
 
 ```js
 (() => {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _es_sync__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _es_sync__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__('./src/es_sync.js');
 
 console.log('es_sync', _es_sync__WEBPACK_IMPORTED_MODULE_0__.sync);
 
 })();
 ```
 
+`_es_sync__WEBPACK_IMPORTED_MODULE_0__` ：
+
+![_es_sync__WEBPACK_IMPORTED_MODULE_0__](./webpack-async/assets/sync_module.jpg)
+
 ### 对于commonJs的处理 
 
 抛出的属性仅仅是赋值
 
 ```js
+/***/ "./src/commonJs_sync.js":
+/*!******************************!*\
+  !*** ./src/commonJs_sync.js ***!
+  \******************************/
 /***/ ((module) => {
 
+// eval("module.exports.name = 'name'\n\nmodule.exports.add = function(){\n  return 'add'\n}\n\n// var count = 1;\n\n// setTimeout(() => {\n//   count ++\n// }, 1000)\n\n// module.exports.count = count\n\n//# sourceURL=webpack://webpack-async/./src/commonJs_sync.js?");
 module.exports.name = 'name'
 
 module.exports.add = function(){
   return 'add'
 }
 
+/***/ }),
 
-/***/ })
 ```
 ```js
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const sync = __webpack_require__(1);
+const sync = __webpack_require__("./src/commonJs_sync.js");
 console.log('commonJs_sync', sync);
 
 })();
 
 ```
+
+`sync`:
+
+![_es_sync__WEBPACK_IMPORTED_MODULE_0__](./webpack-async/assets/cjm.jpg)
+
+输出的是结果
 
 ### 对异步模块的处理
 
