@@ -6,7 +6,8 @@ const options = {
   entry: {
     commonJs_sync_index: pathLib.resolve(__dirname, "./src/commonJs_sync_index.js"),
     es_sync_index: pathLib.resolve(__dirname, "./src/es_sync_index.js"),
-    async_index: pathLib.resolve(__dirname, "./src/async_index.js")
+    async_index: pathLib.resolve(__dirname, "./src/async_index.js"),
+    import_test: pathLib.resolve(__dirname, "./src/main.js"),
   },
   output: {
     path: pathLib.resolve(__dirname, "./dist"),  //出口位置
@@ -51,6 +52,17 @@ const options = {
       filename: 'async_index.html',
       template: 'index.html',
       chunks: ['async_index'],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: false,
+        removeAttributeQuotes: true
+      }
+    }),
+    new HtmlWebpackPlugin({
+      title: 'test_import()',
+      filename: 'test_import().html',
+      template: 'index.html',
+      chunks: ['import_test'],
       minify: {
         removeComments: true,
         collapseWhitespace: false,
