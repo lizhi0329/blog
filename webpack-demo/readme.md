@@ -2,15 +2,89 @@
 
 ## `contenthash`、`hash`、`chunkhash`
 
-1. contenthash: 输出文件内容的 md4-hash。
+1. contenthash: 只有当文件自己的内容发生改变时，其打包的 hash 值才会发生变动。
+
 2. hash: hash针对的是每一次构建（build）而言，每一次构建之后生成的文件所带的哈希都是一致的。它关心的是整体项目的变化，只要有任意文件内容发生了更改，那么构建之后其他文件的哈希也会发生更改。
-3. chunkhash: 基于的是每一个 chunk 内容的改变，如果是该 chunk 所属的内容发生了变化，那么只有该 chunk 的输出文件的哈希会发生变化，其它的不会
 
-## webpack中模块的概念
+3. chunkhash: 基于的是每一个 chunk 内容的改变，如果是该 chunk 所属的内容发生了变化，那么只有该 chunk 的输出文件的哈希会发生变化，其它的不会。
 
-在模块化编程中，开发者将程序分解为功能离散的 chunk，并称之为 **模块**。
+例如: 
 
-每个模块都拥有小于完整程序的体积，使得验证、调试及测试变得轻而易举。 精心编写**模**提供了可靠的抽象和封装界限，使得应用程序中每个模块都具备了条理清晰的设计和明确的目的。
+hash
+├─ package.json
+├─ src
+│  ├─ add.js
+│  ├─ index.css
+│  ├─ index.js
+│  └─ sub.js
+├─ webpack.config.js
+└─ yarn.lock
+
+webpack.config.js 配置：
+
+```js
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+module.exports = {
+  entry: {
+    index: './src/index.js',
+    add: './src/add.js',
+    sub: './src/sub.js',
+  },
+  mode: 'production',
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    // filename: '[name].[fullhash].js',
+    filename: '[name].[chunkhash].js',
+    clean: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'compare hash',
+    }),
+  ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false, // 是否将注释剥离到单独的文件中
+      }),
+      // 本插件会将 CSS 提取到单独的文件中，为每个包含 CSS 的 JS 文件创建一个 CSS 文件，并且支持 CSS 和 SourceMaps 的按需加载。
+      new MiniCssExtractPlugin({ // 拆分css
+        // filename: '[name].[fullhash].css',
+        filename: '[name].[contenthash].css',
+      }),
+    ],
+  },
+};
+
+```
+
+`webpack.config.js`中 `output.filename`为`[name].[fullhash].js` 打包后所有的文件hash值相同。更改 add.js后，再次打包所有文件的 hash 值都发生了改变。
+我们只改变了 add.js，受影响的只有 add.js 文件本身和依赖他的文件 index.js, 其他文件是没有必要更新hash的。
+
+
+`webpack.config.js`中 `output.filename`为`[name].[chunkhash].js` 打包后 可以看到 index.js 和 index.css 是一样的，因为打包后他们属于同一个模块，
+改变 add.js 再次打包 可以看到虽然公共库 lodash 和 sub.js 文件的打包值这次没有改变，除了 add.js 和 index.js 的打包值发生了变动之外， index.css 的打包 hash 值也发生了变化。
+为解决这种问题 我们将拆分的 css 的 filename 设置为 `[name].[contenthash].css` 再次打包，发现 css 打包的hash值不再与 index.js 相同，它是基于自己内容打包的hash值。再次改变
+add.js 再打包，此时只有 add.js和 index.js发生改变。
+
+
+
+
+
 
 
 ## webpack支持的模块类型
@@ -27,6 +101,13 @@ Webpack 天生支持如下模块类型：
 
 - less
 - stylus
+
+
+## 什么是chunk?
+
+- 每个入口文件都是一个chunk，每个chunk是由入口文件与其依赖所构成，
+- 异步加载的文件也被视为是一个chunk
+- chunkhash是由每次编译模块，根据模块及其依赖模块构成chunk生成对应的chunkhash, 这也就表明了每个chunk的chunkhash值都不一样， 也就是说每个chunk都是独立开来的，互不影响，每个chunk的更新不会影响其他chunk的编译构建
 
 
 ## webpack 默认的分包规则

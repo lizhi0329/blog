@@ -1,11 +1,3 @@
-// lib.js
-// export let counter = 3;
-// export function incCounter() {
-//   counter++;
-// }
+const name = 'lz'
 
-const test = 'test'
-
-export default {
-  test
-}
+exports.name = name
