@@ -10,6 +10,7 @@
 
 例如: 
 
+```
 hash
 ├─ package.json
 ├─ src
@@ -19,6 +20,7 @@ hash
 │  └─ sub.js
 ├─ webpack.config.js
 └─ yarn.lock
+```
 
 webpack.config.js 配置：
 
