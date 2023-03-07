@@ -9,6 +9,15 @@
 - js文件多，变得不好维护。
 - js文件依赖问题，稍微不注意顺序引入错，代码全报错
 
+## type="module"
+
+通过 给 `script` 标签加上 `type = "module"` 属性表明这是一个ESM模块。
+带此属性的script有以下特点：
+
+1. 每个script是一个作用域。
+2. 采用严格模式 this不可用
+3. 发送cors请求
+
 ## es module 优势
 
 Es Module 的产生有很多优势：
