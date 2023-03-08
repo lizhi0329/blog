@@ -17,6 +17,21 @@
 1. 每个script是一个作用域。
 2. 采用严格模式 this不可用
 3. 发送cors请求
+4. script标签采用类似 defer 模式 不会阻塞主代码进行
+
+例如： 
+打印结果 1 2 再弹出 alert
+```html
+  <script>
+    console.log('1');
+  </script>
+  <script type="module">
+    alert('hello')
+  </script>
+  <script >
+    console.log('2');
+  </script>
+```
 
 ## es module 优势
 

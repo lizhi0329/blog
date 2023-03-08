@@ -1,6 +1,7 @@
 # InterSection Observe
 
 [mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver/disconnect)
+[ruanyifeng](https://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html)
 
 ## 描述
 

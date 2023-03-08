@@ -1,1 +1,1 @@
-[析 SplitChunksPlugin 及代码分割的意义](https://mp.weixin.qq.com/s/wZ0rqkZQ1XFbJBLG2aE7_Q)
+[浅析 SplitChunksPlugin 及代码分割的意义](https://mp.weixin.qq.com/s/wZ0rqkZQ1XFbJBLG2aE7_Q)
