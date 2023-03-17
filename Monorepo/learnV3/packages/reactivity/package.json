@@ -1,0 +1,19 @@
+{
+  "name": "@v3/reactivity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/reactivity.cjs.js",
+  "module": "dist/reactivity.esm-bundler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "buildOptions": {
+    "name": "VueReactivity"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@v3/share": "workspace:^1.0.0"
+  }
+}
