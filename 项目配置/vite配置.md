@@ -25,3 +25,13 @@
      },
 
    ```
+
+# build配置
+
+## 去除log、debugger
+
+   ```js
+      esbuild: {
+         drop: ['console', 'debugger']
+      },
+   ```

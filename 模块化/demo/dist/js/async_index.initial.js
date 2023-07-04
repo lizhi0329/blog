@@ -59,7 +59,7 @@
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "js/async/" + chunkId + ".chunk." + chunkId + "." + "af058e3801a9895e5d16" + ".js";
+/******/ 			return "js/async/" + chunkId + ".chunk." + chunkId + "." + "e2a2711ea40f8b352237" + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -71,10 +71,11 @@
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
 /******/ 		var inProgress = {};
-/******/ 		var dataWebpackPrefix = "webpack-async:";
+/******/ 		var dataWebpackPrefix = "demo:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+              // 判断是否有记载的script标签
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
 /******/ 				var scripts = document.getElementsByTagName("script");
@@ -105,7 +106,7 @@
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
 /******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
-/******/ 			};
+/******/ 			}
 /******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
@@ -137,7 +138,7 @@
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			0: 0
+/******/ 			"async_index": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -214,19 +215,19 @@
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunkwebpack_async"] = self["webpackChunkwebpack_async"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunkdemo"] = self["webpackChunkdemo"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-__webpack_require__.e(/* import() */ 5).then(__webpack_require__.bind(__webpack_require__, 6)).then(val => {
-  console.log('async 1', val.async);
+/*!****************************!*\
+  !*** ./src/async/index.js ***!
+  \****************************/
+__webpack_require__.e(/*! import() */ "src_async_async_js").then(__webpack_require__.bind(__webpack_require__, /*! ./async.js */ "./src/async/async.js")).then((res) => {
+  console.log(res);
 });
 
-// import('./async').then(val => {
-//   console.log('async 2', val.async);
-// });
 /******/ })()
 ;
