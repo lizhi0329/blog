@@ -1,19 +1,40 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 3:
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */,
+/* 2 */,
+/* 3 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "sync": () => (/* binding */ sync)
 /* harmony export */ });
+/* harmony import */ var _test__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 let sync = 'sync';
 
-/***/ })
 
-/******/ 	});
+
+/***/ }),
+/* 4 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "sync": () => (/* reexport safe */ _es_sync__WEBPACK_IMPORTED_MODULE_0__.sync)
+/* harmony export */ });
+/* harmony import */ var _es_sync__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (() => {
+  console.log("按钮点击了");
+});
+
+
+console.log(sync);
+
+/***/ })
+/******/ 	]);
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};

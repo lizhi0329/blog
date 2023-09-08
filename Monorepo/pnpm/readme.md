@@ -34,3 +34,12 @@
 
   ```
  
+
+ ## dependencies、devDependencies、peerDependencies 的区别
+
+ 每个项目的 package.json 文件内都声明了项目的依赖，其中有三种类型，`dependencies`、`devDependencies`、`peerDependencies`。
+
+ 
+
+ <!-- https://juejin.cn/post/7124613898115743757 -->
+ <!-- https://juejin.cn/post/6932046455733485575#heading-6 -->
