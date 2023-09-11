@@ -1,3 +1,12 @@
+- [vite打包后的文件提供传统浏览器兼容性支持](#vite打包后的文件提供传统浏览器兼容性支持)
+  - [@vitejs/plugin-legacy 插件](#vitejsplugin-legacy-插件)
+- [SystemJS](#systemjs)
+- [crossorigin](#crossorigin)
+- [script标签加载js的3个时机](#script标签加载js的3个时机)
+  - [async](#async)
+- [rel属性](#rel属性)
+
+
 ## vite打包后的文件提供传统浏览器兼容性支持
 
 ###  @vitejs/plugin-legacy 插件
@@ -165,7 +174,7 @@ SystemJS 的主要特点包括：
 
 ```
 
-### crossorigin
+## crossorigin
 
 作用：定义该元素如何处理跨源请求，从而实现对该元素获取数据的 CORS 请求的配置
 
@@ -181,3 +190,18 @@ SystemJS 的主要特点包括：
 既可以访问JavaScript的错误上下文，也可以在请求过程中的SSL握手阶段时携带cookies或用户凭据。
 
 - "": 将属性名称设置为空值，如 crossorigin 或 crossorigin=""，与设置为 anonymous 的效果一样。
+
+
+## script标签加载js的3个时机
+
+正常情况下 html 遇到 script标签会停下渲染加载script标签。 多个script标签 会按顺序执行（尽管先遇到的可能响应时间更长），也就是说最终执行顺序和请求顺序一致。
+
+而加上async 和 defer 会起到延迟作用：
+
+### async
+
+## rel属性
+
+作用范围：crossorigin 属性作用在`link`、`a`、`area`有效。
+
+<!-- https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/rel -->

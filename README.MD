@@ -6,6 +6,8 @@
 4. [http 缓存](./browser/cache.md)
 5. [http cookie](./browser/cookie.md)
 6. [commonjs](./%E6%A8%A1%E5%9D%97%E5%8C%96/commonJS.md)
+7. [pnpm](./Monorepo/pnpm/readme.md)
+8. [dependencies、devDependencies、peerDependencies 的区别](./Monorepo/pnpm/readme.md)
 
 
 ### vite
