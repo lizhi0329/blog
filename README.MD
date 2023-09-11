@@ -8,6 +8,11 @@
 6. [commonjs](./%E6%A8%A1%E5%9D%97%E5%8C%96/commonJS.md)
 
 
+### vite
+
+1. [vite兼容旧浏览器](./vite/readme.md)
+
+
 ## browser
 
 1. [message loop](./browser/messageLoop.md)

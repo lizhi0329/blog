@@ -165,4 +165,19 @@ SystemJS 的主要特点包括：
 
 ```
 
-### script 标签上的 crossorigin rel
+### crossorigin
+
+作用：定义该元素如何处理跨源请求，从而实现对该元素获取数据的 CORS 请求的配置
+
+作用范围：crossorigin 属性作用在`audio`、`video`、`script`、`link`、`img`有效。
+
+参数可选值：
+
+- anonymous： 请求使用了 CORS 标头，且证书标志被设置为 'same-origin'。
+没有通过 cookies、客户端 SSL 证书或 HTTP 认证交换用户凭据，除非目的地是同一来源。不合法的关键字或空字符串会视为 anonymous 关键字。
+可以访问JavaScript的错误上下文，但在请求过程中的SSL握手阶段不会携带cookies或其他用户凭据。
+
+- use-credentials：请求使用了 CORS 标头，且证书标志被设置为 'include'。总是包含`用户凭据`。
+既可以访问JavaScript的错误上下文，也可以在请求过程中的SSL握手阶段时携带cookies或用户凭据。
+
+- "": 将属性名称设置为空值，如 crossorigin 或 crossorigin=""，与设置为 anonymous 的效果一样。
