@@ -194,9 +194,16 @@ SystemJS 的主要特点包括：
 
 ## script标签加载js的3个时机
 
+
 正常情况下 html 遇到 script标签会停下渲染加载script标签。 多个script标签 会按顺序执行（尽管先遇到的可能响应时间更长），也就是说最终执行顺序和请求顺序一致。
 
+![html解析script](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/caf2f618530046658ab8e3b4a8699589~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+
 而加上async 和 defer 会起到延迟作用：
+
+- async： 当遇到async的script标签时，请求该脚本的网络请求是异步的，不会阻塞浏览器解析 HTML，一旦网络请求回来之后，如果此时 HTML 还没有解析完，浏览器会暂停解析，先让 JS 引擎执行代码，执行完毕后再进行解析。如果存在多个 async 的时候，它们之间的执行顺序也不确定，完全依赖于网络传输结果，谁先到执行谁。
+- defer： 当浏览器遇到带有 defer 属性的 script 时，获取该脚本的网络请求也是异步的，不会阻塞浏览器解析 HTML，一旦网络请求回来之后，如果此时 HTML 还没有解析完，浏览器不会暂停解析并执行 JS 代码，而是等待 HTML 解析完毕,但在触发 DOMContentLoaded 事件之前执行的, 再执行 JS 代码。如果存在多个 defer script 标签，浏览器（IE9及以下除外）会保证它们按照在 HTML 中出现的**顺序执行**，不会破坏 JS 脚本之间的依赖关系。
+包含 defer 属性的脚本将阻塞 DOMContentLoaded 事件触发，直到脚本完成加载并执行。
 
 ### async
 

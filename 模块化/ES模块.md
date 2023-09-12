@@ -1,4 +1,12 @@
-[toc]
+- [es module](#es-module)
+  - [type="module"](#typemodule)
+  - [es module 优势](#es-module-优势)
+  - [用法组合](#用法组合)
+  - [特性](#特性)
+  - [import()](#import)
+  - [总结](#总结)
+  - [推荐文章](#推荐文章)
+
 
 # es module
 
