@@ -1,9 +1,25 @@
-[TOC]
+- [webpack 模块化处理](#webpack-模块化处理)
+  - [esModule 与 commonJs](#esmodule-与-commonjs)
+  - [webpack处理两种模块](#webpack处理两种模块)
+    - [处理 es module](#处理-es-module)
+    - [对于commonJs的处理](#对于commonjs的处理)
+    - [对异步加载模块的处理](#对异步加载模块的处理)
+  - [参考文章](#参考文章)
+
 
 # webpack 模块化处理
 
-> webpack如何做到支持`commonjs`、`es module`
+Webpack 天生支持如下模块类型：
 
+- ECMAScript 模块
+- CommonJS 模块
+- AMD 模块
+- Assets（资源模块(asset module)是一种模块类型，它允许使用资源文件（字体，图标等）而无需配置额外 loader。）
+- WebAssembly 模块
+
+webpack会将这些模块处理成统一格式的模块。
+
+> webpack如何做到支持`commonjs`、`es module`。
 ## esModule 与 commonJs
 
 

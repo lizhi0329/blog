@@ -24,3 +24,6 @@ todo:
 
 webpack联邦模块
 webpack hmr
+
+Tapable 学习
+发布订阅实现
