@@ -4,6 +4,7 @@
 - [执行webpack serve命令发生了啥？](#执行webpack-serve命令发生了啥)
 - [webpack tree-sharking](#webpack-tree-sharking)
 
+todo：hmr、webpack serve
 
 ## 基础概念
 
