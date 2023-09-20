@@ -4,6 +4,8 @@
   - [vh 、vw方案](#vh-vw方案)
 - [一些问题](#一些问题)
   - [div和img之间有间隙的原因及解决办法](#div和img之间有间隙的原因及解决办法)
+  - [移动端点击事件300ms延迟原因以及解决方案](#移动端点击事件300ms延迟原因以及解决方案)
+  - [盒模型](#盒模型)
 
 
 ## viewport
@@ -37,7 +39,6 @@ rem（font size of the root element）是指相对于根元素的字体大小的
 ### vh 、vw方案
 
 
-
 ## 一些问题
 
 ### div和img之间有间隙的原因及解决办法
@@ -59,3 +60,35 @@ img{vertical-align:buttom;}
 img{vertical-align:middle;}
 img{vertical-align:top;}
 ```
+
+
+### 移动端点击事件300ms延迟原因以及解决方案
+
+原因：移动浏览器 会在 touchend 和 click 事件之间，等待 300 - 350 ms，判断用户是否会进行双击手势用以缩放文字。
+
+方法：
+
+1. iOS 9.3 和 Chrome on Android (all versions)中
+
+  ```html
+   <meta name="viewport" content="user-scalable=no" /> // 禁用缩放
+  ```
+
+  或者
+
+  ```css
+   html {
+     touch-action: manipulation;
+   }
+  ```
+
+2. FastClick
+
+在移动端点击屏幕时依次触发 `touchstart`、`touchmove` 、`touchend`、`mousemove`、`mousedown`、`mouseup` 、`click`.
+
+fastClick 在 touchend 阶段 调用 event.preventDefault，然后通过 document.createEvent 创建一个 MouseEvents，然后 通过 event​Target​.dispatch​Event 触发对应目标元素上绑定的 click 事件。
+
+
+### 盒模型
+
+https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/The_box_model#%E4%BB%80%E4%B9%88%E6%98%AF_css_%E7%9B%92%E6%A8%A1%E5%9E%8B%EF%BC%9F

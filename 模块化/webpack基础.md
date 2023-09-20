@@ -1,5 +1,6 @@
 - [基础概念](#基础概念)
 - [大概流程](#大概流程)
+- [构建流程](#构建流程)
 - [hot-module-serve](#hot-module-serve)
 - [执行webpack serve命令发生了啥？](#执行webpack-serve命令发生了啥)
 - [webpack tree-sharking](#webpack-tree-sharking)
@@ -40,6 +41,44 @@ webpack的构建流程大概可以分三大阶段：
 
 最后，不同类型的 chunk 用不同的模版打印成对应的代码，然后输出为 js 就好了，这个阶段叫做 emit。
 
+
+## 构建流程
+
+在webpack/lib/webpack中，
+webpack(options, callback) 初始化 compiler，其中 options 是 webpack.config.js 的配置。
+
+在这个方法中会调用 compiler = createCompiler(webpackOptions)， createCompiler：
+```js
+// createCompiler
+const createCompiler = rawOptions => {
+	const options = getNormalizedWebpackOptions(rawOptions); // 统一配置，
+	applyWebpackOptionsBaseDefaults(options);
+	const compiler = new Compiler(options); // 创建实例
+	new NodeEnvironmentPlugin({
+		infrastructureLogging: options.infrastructureLogging
+	}).apply(compiler);
+	if (Array.isArray(options.plugins)) {
+		for (const plugin of options.plugins) {
+			if (typeof plugin === "function") { // 对插件进行调用
+				plugin.call(compiler, compiler);
+			} else if (plugin) {
+				plugin.apply(compiler);
+			}
+		}
+	}
+	applyWebpackOptionsDefaults(options);
+	compiler.hooks.environment.call(); //  environment hooks事件发出
+	compiler.hooks.afterEnvironment.call(); // afterEnvironment hooks 事件发出
+  // 确定 compiler 的 outputPath等。同时会引入 ExternalsPlugin 依赖项标记为相应的类型等，会处理完options的每一个配置
+	new WebpackOptionsApply().process(options, compiler); 
+	compiler.hooks.initialize.call(); // initialize 事件发出
+	return compiler;
+};
+```
+
+webpack(options, callback)这个方法将会返回 compiler ，watch 以及 watchOptions 
+
+如果watch开启了，则会调用 compiler 的watch方法 否则调用run 开始编译。
 
 ## hot-module-serve
 

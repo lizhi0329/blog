@@ -1,3 +1,22 @@
+- [什么是进程？](#什么是进程)
+- [什么是线程？](#什么是线程)
+- [进程与线程关系](#进程与线程关系)
+- [IPC(inter-process communication) 进程间通信](#ipcinter-process-communication-进程间通信)
+- [浏览器进程](#浏览器进程)
+- [渲染主线程](#渲染主线程)
+  - [meesageloop](#meesageloop)
+- [vue2 中 nexttick](#vue2-中-nexttick)
+  - [vue3 中的 nexttick](#vue3-中的-nexttick)
+  - [相关文档](#相关文档)
+- [js执行机制](#js执行机制)
+  - [代码编译](#代码编译)
+  - [代码执行阶段](#代码执行阶段)
+    - [执行上下文](#执行上下文)
+    - [作用域与作用域链](#作用域与作用域链)
+    - [闭包](#闭包)
+    - [this](#this)
+
+
 ## 什么是进程？
 
 进程（Process）是计算机中正在运行的程序的实例。当一个程序被执行时，操作系统会为这个程序创建一个进程，并分配一些系统资源（如CPU时间、内存空间等）给这个进程。进程通常包含一个或多个线程（Thread），每个线程执行不同的任务，但是共享进程的资源和内存空间。
@@ -201,3 +220,272 @@ Vue 3 还会利用浏览器原生的 queueMicrotask 方法，将 nextTick 的回
 ### 相关文档
 
 [MutationObserver mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)
+
+
+## js执行机制
+
+js代码先编译，再执行，所以分两个阶段：
+
+1. 代码编译阶段：将代码翻译成可执行代码。
+2. 代码执行阶段：创建执行上下文、执行代码、垃圾回收。
+
+### 代码编译
+
+V8需要将JS编译成字节码或者二进制代码，在此之间有几个过程：
+
+- 词法分析、语法分析
+- 确定作用域规则
+- 生成可执行代码
+
+
+### 代码执行阶段
+
+#### 执行上下文
+
+执行上下文也称为**调用栈**，是JS引擎用于追踪函数执行以及函数间*调用关系*的机制，通过栈这种数据结构记录了在程序中的位置。
+
+js是单线程语言，只有一个调用栈，主要做的事情是：进入函数，js引擎把该函数的执行上下文压栈，从函数中返回（函数调用结束）则将执行上下文出栈。
+
+执行上下文分三种：
+
+1. 全局上下文 （js执行首先被压入栈）
+2. 函数执行上下文：函数被调用时，进入当前函数执行上下文
+3. eval 执行上下文
+
+当一个函数被激活时（也就是被调用），一个新的执行上下文将会被创建，一个执行上下文的生命周期分为两个阶段：
+
+- 创建阶段：创建变量对象vo、建立作用域链、确定this。
+- 代码执行阶段：变量赋值、函数引用、 执行其他代码。
+
+创建阶段：
+
+1. 变量对象
+   
+| 变量对象 Variable Object，简称 VO 进入执行阶段，变量对象变成活动对象 Active Object , 简称 AO。
+
+VO创建有几个过程：
+
+- 建立arguments对象：当前上下文中的参数，建立该对象下的属性与属性值。
+- 检查当前上下文的函数声明
+  - 寻找 function 函数（函数声明）加属性名到变量对象中，属性值指向该函数的内存地址。
+  - 遇到同名的function函数声明，属性会被新的引用覆盖。
+  - 函数表达式不会被提升，相当于变量声明。
+- 检查当前上下文中的变量声明：
+  - 每找到一个变量声明，就添加到变量对象中，属性值为`undefined`
+  - 遇到同名属性会跳过，可防止同名函数被修改为`undefined`，同一个执行上下文中，变量对象是唯一的（有可能在代码执行阶段被修改赋值）。
+  - `const/let` 声明的变量，也会被收集到变量对象中，但不会赋值`undefined`，所以不能再赋值前调用，也就是常说的暂时性死区，如果访问了，报错`Uncaugth ReferenceError: Cannot access [变量名] before initialization`。
+
+VO对象创建完后，需要进入执行阶段才能访问属性，进入执行阶段，变量对象转变为活动对象，属性能访问，开始执行该阶段的操作：
+
+- 变量赋值（按顺序赋值、会覆盖）
+- 函数引用
+- 执行其他代码
+
+执行阶段，JS引擎开始按顺序一行一行的执行，遇到变量会按顺序赋值，遇见一个赋值语句就覆盖一个属性，包括函数名、不同类型的值。
+
+例子：
+
+```js
+function test() {
+    console.log(foo);
+    console.log(bar);
+
+    function foo() {}
+	  foo = 'Hello';
+    var bar = function() {}
+    console.log(foo)
+    console.log(bar)
+ }
+test();
+
+  // 一、创建阶段，创建变量对象
+  VO = {
+    arguments: {...},
+    foo: <foo reference>, //优先函数声明，碰到变量foo不会被覆盖，var声明的变量当遇到同名的属性时，会跳过而不会覆盖
+    bar: underfined // 函数表达式 -> 当做变量声明处理
+  }
+
+  // 二、执行阶段，VO => AO，按顺序赋值，逐一覆盖
+  AO = {
+    arguments: {...},
+    foo: 'Hello', // 执行阶段按顺序进行赋值或者引用
+    bar: <bar reference>,
+  }
+
+  // 预编辑伪代码
+  function test() {
+      // 1、创建变量对象阶段
+      var foo;
+      foo => function foo() {} //一等公民函数，优先声明，并指向函数的引用地址
+      var bar : underfined
+
+      // 2、代码执行阶段: 变量赋值，函数引用, 全部按照顺序来
+      console.log(foo); // 函数引用
+      console.log(bar); // underfined
+      // 按顺序执行到这里，重新给变量foo赋值
+      foo = 'Hello';
+      console.log(foo); // 'Hello'
+      bar = function () {
+      return 'world';
+    }
+  }
+```
+
+变量提升具有两个问题：
+
+1. 变量容易被覆盖
+2. 本应销毁的变量没有被销毁
+
+例如：
+
+```js
+function foo(){ 
+  for (var i = 0; i < 7; i++) {
+  } 
+  console.log(i); 
+}
+foo() // i打印7
+
+```
+
+按道理 for循环结束后 i应该被销毁，但是并没有，能够打印出i的值
+这是变量提升的杰作，在创建执行上下文的阶段，变量i就被提升了，所以for循环结束后，i不会被销毁
+为了尽可能避开`变量提升`这个JS的设计缺陷，ES6用`let/const`引入了块级作用域（之前JS只有`全局作用域`和`函数作用域`两种）
+
+块级作用域：块级作用域就是使用一对大括号包裹的一段代码，比如函数、判断语句、循环语句，甚至单独的一个{}都可以被看作是一个块级作用域，大部分语言都支持块级作用域。
+
+例如：
+
+```js
+function foo(){
+    var a = 1
+    let b = 2
+    {
+      let b = 3
+      var c = 4 // 用var，即使在{}块里，也会被提升
+      let d = 5
+      console.log(a)
+      console.log(b)
+    }
+    console.log(b) 
+    console.log(c)
+    console.log(d)
+}   
+foo()
+```
+
+编辑并创建执行上下文如下图:
+
+![创建执行上下](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082235655.png)
+
+- var声明的变量，全部被提取到变量对象里
+- let/const声明的变量，放到词法环境里
+- 函数作用域块内部用let声明的变量，并没有存放到词法环境
+
+然后执行代码阶段，先执行到内部代码块：
+
+![执行阶段](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082235501.png)
+
+词法环境里维护了一个小型的栈结构，在不同块级作用域通过let/const声明的变量会有进栈出栈的行为。
+
+具体查找顺序：词法环境的栈顶开始 -> 词法环境的某个块级 -> 变量对象
+
+![具体查找顺序](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082235621.png)
+
+可以了解词法环境的结构和工作机制:
+
+1. 块级作用域是通过词法环境的栈结构来实现的
+2. 变量提升是通过变量环境来实现 通过这两者的结合，JavaScript 引擎也就同时支持了变量提升和块级作用域了
+
+
+#### 作用域与作用域链
+
+执行上下文中，除了有变量对象，还有作用域链和this
+
+作用域是一套规则，作用域链是作用域的具体实现.
+
+每个函数的执行上下文都会通过进栈出栈的形式来执行，在每个执行上下文的变量环境中，包含了一个外部引用outer，用来指向外部的执行上下文。
+
+如果JS引擎在当前执行上下文中找不到某个变量，就会继续在outer指向的执行上下文中查找，一直到全局的执行上下文，这个查找链条称为**作用域链**。
+
+```js
+function bar() {
+  // 跟定义环境有关
+ console.log(myName)
+}
+function foo() {
+    var myName = "极客邦"
+    bar()
+}
+var myName = "极客时间"
+foo()
+
+```
+
+![作用域链](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082235088.png)
+
+在上面块级作用域中就使用了作用域链
+
+在JS执行过程中，作用域链是由词法作用域决定的，而词法作用域是由代码中*函数声明的位置*决定的，在代码编译阶段就决定的静态作用域，跟函数怎么调用没有关系。
+
+![作用域链](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082236404.webp)
+
+![作用域链](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082236523.webp)
+
+通过作用域查找变量的链接称为作用域链，作用域链是通过词法作用域确定的，它反应了代码的结构.
+
+#### 闭包
+
+例如：
+
+```js
+function foo() {
+  var a = 2;
+  function bar() {
+    console.log(a);
+  }
+  return bar;
+}
+var baz = foo();
+baz();
+```
+
+作用域链：Local -> Closure(foo) -> Global
+
+给闭包一个定义：在执行上下文A中创建了函数B，当B执行时访问了A中的变量（即使A已经执行结束，执行上下文已出栈），这些变量会保存在内存中，这些变量的集合成为闭包
+
+用上面的例子来解释：foo函数创建了bar函数，根据词法作用域的规则，bar总是可以访问它的外部函数foo中的变量，即使foo函数已经执行结束，通过bar函数依然能访问到foo函数的内部变量a，a不会随着foo函数执行上下文的销毁而销毁，而是生成Closure(foo)，被保存在了内存中。
+
+#### this
+
+JS的作用域机制并不支持在对象内部方法中使用自身内部属性，所以需要额外搞出一套This机制，它跟作用域链是两套系统，没有太多联系
+
+this分一下四种：
+
+![this](https://raw.githubusercontent.com/amandakelake/picgo-images/master/images/202212082236248.png)
+
+```js
+var name = "window name"
+var obj = {
+  name : "obj name", 
+  showThis: function(){
+    console.log(this.name)
+    function bar(){ 
+		console.log(this.name) 
+	  }
+    bar()
+  }
+}
+obj.showThis()
+// 第一个this执行obj对象 -> 这个容易理解
+// 第二个，bar里面的this -> 指向window对象，容易误以为继承外面的this
+
+```
+
+这是this的设计缺陷之一：嵌套函数中的this不会继承外层函数的this 解决方法有两种:
+
+- ES6的箭头函数：箭头函数不会创建自身的执行上下文，它的this取决于外部函数（也可以说它无this）
+- 在外层函数声明变量self来保存this -> 把this体系转换为作用域的体系
+
+this的设计缺陷二：普通函数中的this指向全局对象window 常见的解决办法：
+- 用call、apply显示调用某个对象
