@@ -15,6 +15,9 @@
     - [作用域与作用域链](#作用域与作用域链)
     - [闭包](#闭包)
     - [this](#this)
+  - [call 、apply 、bind](#call-apply-bind)
+    - [call](#call)
+    - [apply](#apply)
 
 
 ## 什么是进程？
@@ -489,3 +492,69 @@ obj.showThis()
 
 this的设计缺陷二：普通函数中的this指向全局对象window 常见的解决办法：
 - 用call、apply显示调用某个对象
+
+
+### call 、apply 、bind
+
+
+#### call
+
+| call() 方法在使用一个指定的 this 值和若干个指定的参数值的前提下调用某个函数或方法。
+
+如果函数不在严格模式下，如果第一个参数是 null 和 undefined 将被替换为全局对象，并且*原始值*将被转换为对象。
+
+使用：
+
+```js
+function a() {
+  console.log(arguments, this.name);
+}
+var obj = {
+  name: 'lizhi'
+}
+a()
+a.call(obj, 'age', 'sex') // this 指向了 obj，并且函数执行了，多个参数也传到了a中。
+```
+
+实现思路：将函数设为对象的属性、执行该函数、删除该函数
+
+```js
+
+Function.prototype.customCall = function(context, ...args) {
+  let context = context
+  // 处理 null 和 undefined
+  if ([null, undefined].includes(context)) {
+    context = window
+  }
+  // 如果是原始值例如 string、number，举例string
+  if(typeof context === 'string') {
+    context = new String(context)
+  }
+  context.fn = this
+  console.log(arguments); // 获取customCall参数，第一个是传入的函数，需要取后续的
+  context.fn(...args) //剩余参数传递
+  delete context.fn
+}
+
+```
+
+#### apply
+
+apply和call的区别在于 apply 第二参数接受数组或者类数组
+
+```js
+Function.prototype.myApply = function(context, args) {
+  let context = context
+  // 处理 null 和 undefined
+  if ([null, undefined].includes(context)) {
+    context = window
+  }
+  // 如果是原始值例如 string、number，举例string
+  if(typeof context === 'string') {
+    context = new String(context)
+  }
+  context.fn = this
+  context.fn(args) //剩余参数传递
+  delete context.fn
+}
+```
