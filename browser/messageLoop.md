@@ -18,6 +18,11 @@
   - [call 、apply 、bind](#call-apply-bind)
     - [call](#call)
     - [apply](#apply)
+    - [bind](#bind)
+  - [原型](#原型)
+    - [prototype](#prototype)
+    - [__proto__](#proto)
+    - [new](#new)
 
 
 ## 什么是进程？
@@ -244,6 +249,23 @@ V8需要将JS编译成字节码或者二进制代码，在此之间有几个过�
 ### 代码执行阶段
 
 #### 执行上下文
+
+![context](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf691daa11284d93b930557adcf8af09~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
+
+总结：js代码执行需要经过编译阶段、执行阶段。在编译阶段中，代码经过编译会生成两部分内容：执行上下文和可执行代码（如上图）。执行上下文是JS代码的执行环境，多个执行上下文将被依次压入一个栈结构，这个栈结构称作调用栈。
+
+执行上下文中包含三部分：变量环境、词法环境 和 this变量。
+
+* 变量环境：是一个对象，保存var变量和function函数声明。
+* 词法环境：也是一个栈结构，栈成员是一个对象，保存let和const变量。
+
+变量访问总是从词法环境的栈顶开始，从栈顶到栈底，然后到变量环境。
+
+变量访问总是从词法环境的栈顶开始，从栈顶到栈底，然后到变量环境。这个变量访问顺序就是*作用域链*。
+
+上下文之间偶尔会插入一个闭包，闭包通常跟楼上的函数上下文一起入栈，它不是一个上下文结构，但保存着内部函数创建时所引用的外部函数变量。
+
+具体解释：
 
 执行上下文也称为**调用栈**，是JS引擎用于追踪函数执行以及函数间*调用关系*的机制，通过栈这种数据结构记录了在程序中的位置。
 
@@ -542,6 +564,8 @@ Function.prototype.customCall = function(context, ...args) {
 
 apply和call的区别在于 apply 第二参数接受数组或者类数组
 
+
+
 ```js
 Function.prototype.myApply = function(context, args) {
   let context = context
@@ -558,3 +582,84 @@ Function.prototype.myApply = function(context, args) {
   delete context.fn
 }
 ```
+
+#### bind
+
+Function 实例的 bind() 方法创建一个新函数，当调用该新函数时，它会调用原始函数并将其 this 关键字设置为给定的值，同时，还可以传入一系列指定的参数，这些参数会插入到调用新函数时传入的参数的前面。
+
+
+语法： `bind(thisArg, arg1, arg2, /* …, */ argN)`
+
+thisArg：在调用绑定函数时，作为 this 参数传入目标函数 func 的值。如果函数不在严格模式下，null 和 undefined 会被替换为全局对象，并且原始值会被转换为对象。如果使用 new 运算符构造绑定函数，则忽略该值。**如果使用 new 运算符构造绑定函数，则忽略该值。**
+
+举例：
+
+```js
+const module = {
+  x: 42,
+  getX: function () {
+    return this.x;
+  },
+};
+
+const unboundGetX = module.getX;
+console.log(unboundGetX()); // The function gets invoked at the global scope
+// Expected output: undefined
+
+const boundGetX = unboundGetX.bind(module);
+console.log(boundGetX());
+// Expected output: 42
+```
+
+实现：
+
+```js
+Function.prototype.myBind = function(context, ...args) {
+  let that = this
+  return function(...args2) {
+    return that.apply(context, [...args, ...args2])
+  }
+}
+// todo 如果使用 new 运算符构造绑定函数，则忽略该值
+```
+
+
+### 原型
+
+对象都是通过函数创建的，函数是对象.
+
+#### prototype
+
+每个**函数**都有这属性，有且仅有函数才拥有该属性。
+
+但是有个例外：
+
+```js
+// 用这个方法创建的函数是不具备prototype属性的
+let fun = Function.prototype.bind()
+
+// fun -> ƒ () { [native code] }
+// typeof Function.prototype === 'function'
+```
+
+Prototype属性里面默认有一个属性constructor,对应着构造函数。
+
+constructor是一个公有的而且不可枚举的属性，一旦改写了函数的Prototype,新对象就没有这个属性了。
+
+#### __proto__
+
+每个**对象**都有一个隐藏属性__proto__，这个属性引用了创建这个对象的构造函数的原型
+
+fn.__proto__ === Fn.prototype
+
+__proto__ 将对象和原型连接起来组成了原型链
+
+
+- Object.prototype.__proto__ === null  对象的原型的__proto__属性是null
+- Object.__proto__ === Function.prototype 既然对象是函数创建的，那么对象的__proto__要指向创建它的构造函数的原型。
+- Function的特殊性Function.__proto__ === Function.prototype。函数也是被Function创建的，那么函数的__proto__也应该指向Function的原型，这是一个环形结构，函数的prototype和__proto__属性指向同一个对象
+
+
+####  new
+
+
