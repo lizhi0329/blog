@@ -5,8 +5,7 @@
 </template>
 
 <script lang='ts' setup>
-import { name } from '@mrx/utils'
-console.log(name);
+// import { name } from '@mrx/utils';
 
 </script>
 

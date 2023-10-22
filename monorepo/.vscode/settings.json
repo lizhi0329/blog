@@ -1,0 +1,19 @@
+{
+  // 关闭 IDE 自带的样式验证
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  // 指定 stylelint 生效的文件类型(尤其是 vue 文件)。
+  // "stylelint.validate": ["css", "scss", "postcss", "vue"],
+
+  // 启用 eslint 的格式化能力
+  "eslint.format.enable": true,
+  // eslint 会在检查出错误时，给出对应的文档链接地址
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  // 指定 eslint 生效的文件类型(尤其是 vue 文件)。
+  "eslint.probe": ["javascript", "typescript", "vue"],
+  // 指定 eslint 的工作区，使每个子模块下的 .eslintignore 文件都能对当前目录生效。
+  "eslint.workingDirectories": [{"mode": "auto"}],
+}

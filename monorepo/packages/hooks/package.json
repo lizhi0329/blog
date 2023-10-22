@@ -1,0 +1,15 @@
+{
+  "name": "@mrx/hooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "vue": ">=3.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
