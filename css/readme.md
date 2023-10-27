@@ -6,6 +6,10 @@
     - [水平居中](#水平居中)
     - [垂直居中](#垂直居中)
   - [页面导入样式时，link和@import有什么区别](#页面导入样式时link和import有什么区别)
+  - [盒模型](#盒模型)
+  - [元素隐藏的几种方式](#元素隐藏的几种方式)
+  - [position](#position)
+  - [css 选择器和优先级](#css-选择器和优先级)
 
 ## 继承属性
 
@@ -186,3 +190,71 @@ link
    1. 将 link 标签放在 HTML 文档的底部，这样可以先渲染页面的内容，然后再加载样式表。这样可以减少页面渲染的延迟时间，提高用户体验。
    2. 使用 rel="preload" 属性来指示浏览器预加载样式表，这样可以在页面渲染之前预先下载样式表，提高页面渲染的速度。
    3. 使用内联样式（inline style）来减少样式表的数量和大小，这样可以减少样式表的下载时间和解析时间，提高页面渲染的速度。但是这种方式不适用于大型网站，因为内联样式会增加 HTML 文档的大小，降低页面的性能和可维护性。
+
+
+## 盒模型
+
+两种盒子模型都是由 `content + padding + border + margin` 构成，其大小都是由 `content + padding + border` 决定的，但是盒子内容宽/高度（即 width/height）的计算范围根据盒模型的不同会有所不同：
+
+标准盒模型：只包含 content 。
+IE（替代）盒模型：content + padding + border 。
+
+例如：一个盒子样式
+
+```css
+.box {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #dcdcdc;
+  background-color: lightblue;
+  margin: 20px;
+  padding: 20px;
+}
+```
+
+- content-box(W3C 标准盒模型)
+
+![content-box](../css/content-box.pic.jpg)
+
+width = content + padding + border
+width = 1px + 20px + 200px
+
+- border-box((IE 盒模型))
+
+![border-box](../css/boder-box.pic.jpg)
+
+width =  content(padding + width + border)
+width = 200px
+
+## 元素隐藏的几种方式
+
+- overflow:hidden 隐藏除宽高外的内容
+
+- opacity:0 占地了，可以点击
+
+- visibility:hidden 占地了，但看不见
+
+- display:none 不占地，也看不见
+
+## position
+
+- absolute 绝对定位，脱离文档流，相对于父级元素。
+- relative 相对定位，不脱离文档流，参考自身静态位置定位。
+- fixed 固定定位，这里他所固定的对象是浏览器可视窗口而并非是body或是父级元素。
+- sticky: 粘性定位，相当于relative 和 fixed 的结合，元素在跨越特定阈值前为相对定位，之后为固定定位。适用于顶部导航栏、标题、操作栏、底部评论等。
+
+
+## css 选择器和优先级
+
+内联 > id选择器 > 类选择器、属性选择器（a[href="https://example.org"]）、伪类（:first-child） > 标签选择器（h1,a,div） 和 伪元素（::before,::after）
+
+
+优先级是由 A 、B、C、D 的值来决定的
+
+如果存在内联样式，那么 A = 1，否则 A = 0 ；
+B 的值等于 ID选择器（#id） 出现的次数；
+C 的值等于 类选择器（.class） 和 属性选择器（a[href="https://example.org"]） 和 伪类（:first-child） 出现的总次数；
+D 的值等于 标签选择器（h1,a,div） 和 伪元素（::before,::after） 出现的总次数。
+
+
+从左到右比较，如果都相等，后面覆盖前面的

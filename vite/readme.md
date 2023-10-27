@@ -5,6 +5,9 @@
 - [script标签加载js的3个时机](#script标签加载js的3个时机)
   - [async](#async)
 - [rel属性](#rel属性)
+  - [preload 预加载](#preload-预加载)
+  - [rel="prefetch"](#relprefetch)
+  - [rel="dns-prefetch"](#reldns-prefetch)
 
 
 ## vite打包后的文件提供传统浏览器兼容性支持
@@ -209,6 +212,39 @@ SystemJS 的主要特点包括：
 
 ## rel属性
 
-作用范围：crossorigin 属性作用在`link`、`a`、`area`有效。
+<!-- 作用范围：crossorigin 属性作用在`link`、`a`、`area`有效。 -->
 
 <!-- https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/rel -->
+
+### preload 预加载
+
+<link> 元素的 rel 属性的 preload 值允许你在 HTML 的 <head> 中声明获取请求，指定页面很快就需要的资源，这些资源是你希望在页面生命周期的早期就开始加载的，早于浏览器的主要渲染机制启动。这可以确保它们更早可用，并且不太可能阻塞页面的渲染，从而提高性能。尽管名称中包含“load”一词，但它并不加载和执行脚本，而只是安排脚本以更高的优先级进行下载和缓存。
+
+
+<link rel="preload" href="main.js" as="script" />
+
+什么类型的内容可以被预加载？
+
+- audio：音频文件，通常在 <audio> 中使用。
+- document：用于嵌入在 <frame> 或 <iframe> 中的 HTML 文档。
+- embed：用于嵌入在 <embed> 元素中的资源。
+- fetch：通过 fetch 或 XHR 请求访问的资源，例如 ArrayBuffer、WebAssembly 二进制文件或 JSON 文件。
+- font：字体文件。
+- image：图像文件。
+- object：要嵌入在 <object> 元素中的资源。
+- script：JavaScript 文件。
+- style：CSS 样式表。
+- track：WebVTT 文件。
+- worker：JavaScript web worker 或 shared worker。
+- video：视频文件，通常在 <video> 中使用。
+
+### rel="prefetch"
+
+- <link rel="prefetch"> 在浏览器中支持已久，但它是用于预取将在下一次导航/页面加载时使用的资源（例如，当你跳转到下一页时）。这是可以的，但对于当前页面没有用！此外，浏览器会给预取（prefetch）的资源比预加载（preload）的资源更低的优先级——当前页面比下一页更重要。有关更多详细信息，请参阅预取。
+- <link rel="prerender"> 在后台渲染指定的网页，如果用户导航到该页面，可以加速其加载。由于有可能浪费用户的带宽，Chrome 将 prerender 视为 NoState 预取。
+- <link rel="subresource"> 非标准 一段时间以前在 Chrome 中得到了支持，其目的是解决与 preload 相同的问题，但它存在一个问题：没有办法确定项目的优先级（as 当时还不存在），所以它们都是以相当低的优先级获取的。
+
+
+### rel="dns-prefetch"
+
+在 HTML 中，rel="dns-prefetch" 是 <link> 标签的一个属性，用于指定浏览器应该预解析指定的域名。预解析是指浏览器在需要访问一个域名时提前解析 DNS，以便更快地加载资源。通过使用 rel="dns-prefetch" 属性，您可以指定浏览器应该预解析哪些域名，以便更快地加载与这些域名相关联的资源。

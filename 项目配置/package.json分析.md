@@ -1,4 +1,4 @@
-## browserslist
+<!-- ## browserslist
 
   [browserslist github](https://github.com/browserslist/browserslist)
 
@@ -24,3 +24,18 @@
   }
 
   ```
+
+
+
+## 导入模块入口文件优先级详解 main, browser, module, exports
+
+https://juejin.cn/post/7225072417532739644#heading-7 -->
+
+<!-- - "type": "module", 表明是一个es模块 -->
+
+
+#### type
+
+可选值：
+
+- module: 表示这是一个 ES 模块。添加了 "type": "module" 后，Node.js 会将这个包视为 ES 模块，可以在代码中使用 import 和 export 关键字来导入和导出模块。
